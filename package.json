@@ -4,6 +4,11 @@
     "main": "index.js",
     "types": "index.d.ts",
     "description": "Common fs extension tools for Node.js. (copy, mkdir, check fs type, readdir by filter,save and read file, parse gitignore and so on)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/billypc025/nodelib-file.git"
+    },
+    "homepage": "https://github.com/billypc025/nodelib-file",
     "engines": {
         "node": ">=16.0.0"
     },
