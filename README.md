@@ -214,7 +214,7 @@ copy(source: string, dest: string, options?: { force: Boolean }): void
 | `dest`    | 目标路径                                         |
 | `options` | 可传入 `filter` 、 `ignore` 对复制的内容进行限定 |
 
-### Support 4 cases:
+### Support 6 cases:
 
 1.  Copy & Rename
 
@@ -327,6 +327,10 @@ gitignoreParse(path: string, returnRegExp: true): RegExp[]
 | `path`         | .gitignore 文件路径                   |
 | `returnRegExp` | 是否返回正则列表, 默认 `false` 不转换 |
 
+以下示例展示了读取.gitignore 文件后  
+用这个文件过滤项目目录的文件清单, 得到了加入到 git 版本控制的所有文件  
+这对于开发一些代码检查格式化工具等比较有用
+
 ```ini
 # .gitignore
 # -----------
@@ -375,7 +379,7 @@ isFile(path: string, link: Boolean): Boolean
 
 ## `isPath()`
 
-判断字符串是否是文件路径
+判断字符串是否是文件路径, 和`isDirectory`、`isFile` 不同, 仅仅检测字符串是否是一个有效的路径格式, 而不判断文件是否存在
 
 ```typescript
 // typescript declaration
@@ -386,6 +390,14 @@ isPath(str: string): Boolean
 | param | description |
 | ----- | ----------- |
 | `str` | 目标字符串  |
+
+```javascript
+;['./aa', 'a', '/a/b/', '1.js'].forEach(path => console.log(file.isPath(path)))
+// => true
+// => true
+// => true
+// => true
+```
 
 ## `isSymbolicLink()`
 

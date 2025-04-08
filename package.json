@@ -1,6 +1,6 @@
 {
     "name": "nodelib-file",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "main": "index.js",
     "types": "index.d.ts",
     "description": "Common fs extension tools for Node.js. (copy, mkdir, check fs type, readdir by filter,save and read file, parse gitignore and so on)",
