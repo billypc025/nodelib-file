@@ -140,6 +140,38 @@ readdir(
 >
 > [(See Node.js fs constants)](https://github.com/nodejs/node/blob/c17dcb32533aa007dfbf507d22c28ef3c7c11c29/lib/internal/fs/utils.js#L72-L79)
 
+> **Tips:**
+>
+> `rebase` 的作用是自定义返回文件列表的 `base path`
+>
+> ```javascript
+> // Directory tree:
+>
+> a/
+> ├── 1.js
+> ├── b/
+> │   └── 3.js
+> └── 2.js
+>
+> // rebase = true
+> ['a/1.js', 'a/2.js', 'a/b/3.js']
+>
+> // rebase = false
+> ['1.js', '2.js', 'b/3.js']
+>
+> // rebase = '/'
+> ['/1.js', '/2.js', '/b/3.js']
+> //假设需要获取静态目录里的文件, 并得到与文件一一对应的url, rebase='/'将很有用
+>
+> // rebase = './'
+> ['./1.js', './2.js', './b/3.js']
+>
+> // rebase = 'x/'
+> ['x/1.js', 'x/2.js', 'x/b/3.js']
+> ```
+>
+> 这样的好处是, 在后续对文件列表的遍历过程时, 可以直接对最终文件进行操作 (比如复制等操作)
+
 ```javascript
 // 获取web_root的文件清单, 并改变base为'/':
 

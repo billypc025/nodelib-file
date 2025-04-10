@@ -6,12 +6,12 @@
  * @param options.mode 访问模式,默认0o666
  * @param options.flag 默认'w'
  * @param options.flush 如果所有数据都成功写入文件，并且 flush 是 true，则使用 fs.fsync() 来刷新数据。默认值：false。
- * @param options.AboutSingal 允许中止正在进行的 writeFile
+ * @param options.signal 允许中止正在进行的 writeFile
  */
 export function save(
     path: string,
     data: string | Buffer,
-    options?: { encoding?: string; mode?: number; flag?: string; flush?: Boolean; signal?: AboutSingal }
+    options?: { encoding?: string; mode?: number; flag?: string; flush?: Boolean; signal?: AboutSignal }
 ): Promise<void>
 /**
  * 同步读取文件内容

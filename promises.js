@@ -1,6 +1,6 @@
 const FS = require('node:fs/promises')
 const Path = require('node:path')
-const utils = require('./utils')
+const utils = require('./lib/utils')
 const Default_Encoding = 'utf-8'
 
 async function save(path, data, options) {
@@ -211,13 +211,12 @@ async function isPath(str) {
 }
 
 async function gitignoreParse(path, returnRegExp = false) {
-    return (await read(path))
-        .split('\n')
-        .replace(
-            (v, i, a, d) => (
-                (v = trim(v)), !v || v[0] == '#' || v[0] == ':' ? d() : returnRegExp ? utils.ignoreToRegExp(v) : v
-            )
+    return utils.arrayReplace(
+        (await read(path)).split('\n'),
+        (v, i, a, d) => (
+            (v = v.trim()), !v || v[0] == '#' || v[0] == ':' ? d() : returnRegExp ? utils.ignoreToRegExp(v) : v
         )
+    )
 }
 
 module.exports = {

@@ -1,9 +1,12 @@
 {
     "name": "nodelib-file",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "main": "index.js",
     "types": "index.d.ts",
     "description": "Common fs extension tools for Node.js. (copy, mkdir, check fs type, readdir by filter,save and read file, parse gitignore and so on)",
+    "scripts": {
+        "test": "jest"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/billypc025/nodelib-file.git"
@@ -25,5 +28,8 @@
         "gitignore",
         "filter",
         "ignore"
-    ]
+    ],
+    "devDependencies": {
+        "jest": "^29.7.0"
+    }
 }
