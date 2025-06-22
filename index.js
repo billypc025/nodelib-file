@@ -184,7 +184,7 @@ function readdir(path, options = {}) {
                     r && filter && utils.matchFilter(filter, t) && filter.list.push(r),
                     r)
           ),
-          filter && filter.list && filter.list.length > 0 && _base == '/' && (list = filter.list),
+          filter && filter.list && _base == '/' && (list = filter.list),
           list)
         : list
 }
