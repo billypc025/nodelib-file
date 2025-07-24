@@ -62,6 +62,19 @@ export function copy(
          * 忽略命中规则的项(gitignore规则 https://git-scm.com/docs/gitignore),另支持正则和回调函数(见example)
          */
         ignore?: string | RegExp | (string | RegExp)[] | ((path: string) => Boolean)
+        /**
+         * 重命名回调，返回新的文件名或目录名, 返回null时使用不重命名
+         * @param fileOriginPath 源文件路径
+         * @param fileDestPath 目标文件路径
+         * @returns
+         */
+        rename: (fileOriginPath: string, fileDestPath: string) => string | void
+        /**
+         * 内容重写回调, 返回新的文件内容, 返回null时不重写内容
+         * @param fileOriginPath 源文件路径
+         * @param fileDestPath 目标文件路径
+         */
+        transform: (fileOriginPath: string, fileDestPath: string) => string | Buffer | void
     }
 ): void
 /**

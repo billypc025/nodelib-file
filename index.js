@@ -30,22 +30,33 @@ function read(path, options) {
 }
 
 function copy(source, dest, options = {}) {
-    let { filter, ignore } = options
+    let { filter, ignore, transform, rename } = options
     options = { all: true, onlyLeaf: true, filter, ignore }
     isDirectory(source)
         ? dest.endsWith(Path.sep) && !source.endsWith(Path.sep) && (dest = Path.join(dest, Path.basename(source)))
         : (dest.endsWith(Path.sep) || isDirectory(dest)) && (dest = Path.join(dest, Path.basename(source)))
     if (FS.cpSync) {
-        if (!Path.relative(source, dest).startsWith('.')) {
+        if (
+            !Path.relative(source, dest).startsWith('.') ||
+            typeof transform == 'function' ||
+            typeof rename == 'function'
+        ) {
             let fileList = readdir(source, options)
             for (let file of fileList) {
                 let dest1 = dest.endsWith(Path.sep)
                     ? Path.join(dest, file)
                     : Path.join(dest, Path.relative(source, file))
+                typeof rename == 'function' && (dest1 = rename(file, dest1) || dest1)
+
                 if (isDirectory(file)) {
                     mkdir(dest1)
                 } else {
-                    FS.cpSync(file, dest1, { force: true, recursive: true })
+                    if (typeof transform == 'function') {
+                        mkdir(Path.dirname(dest1))
+                        FS.writeFileSync(dest1, transform(file, dest1) || FS.readFileSync(file))
+                    } else {
+                        FS.cpSync(file, dest1, { force: true, recursive: true })
+                    }
                 }
             }
         } else {
@@ -65,11 +76,16 @@ function copy(source, dest, options = {}) {
                 dest.endsWith(Path.sep) && !source.endsWith(Path.sep)
                     ? Path.join(dest, file)
                     : Path.join(dest, Path.relative(source, file))
+            typeof rename == 'function' && (dest1 = rename(file, dest1) || dest1)
             if (isDirectory(file)) {
                 mkdir(dest1)
             } else {
                 mkdir(Path.dirname(dest1))
-                FS.copyFileSync(file, dest1)
+                if (typeof transform == 'function') {
+                    FS.writeFileSync(dest1, transform(file, dest1) || FS.readFileSync(file))
+                } else {
+                    FS.copyFileSync(file, dest1)
+                }
             }
         }
     }

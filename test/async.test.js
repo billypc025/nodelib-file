@@ -153,6 +153,21 @@ describe('copy', () => {
         expect(FS.readFileSync(`a/backup/${n}/1.txt`, 'utf-8')).toBe('a_1')
         await clean()
     })
+
+    test('copy & rename', async () => {
+        await init()
+        await file.copy('a', 'b', { rename: (origin, dest) => `${dest}.log` })
+        expect(FS.existsSync('b/1.txt.log') && FS.existsSync('b/2.txt.log')).toBeTruthy()
+        await clean()
+    })
+
+    test('copy & transform', async () => {
+        await init()
+        await file.copy('a', 'b', { transform: async origin => (await file.read(origin)) + ' transformed' })
+        expect(FS.readFileSync('b/1.txt', 'utf-8')).toBe('a_1 transformed')
+        expect(FS.readFileSync('b/2.txt', 'utf-8')).toBe('a_2 transformed')
+        await clean()
+    })
 })
 
 describe('readdir', () => {

@@ -237,14 +237,43 @@ fs.readdir('../', {
 ```typescript
 // typescript declaration
 
-copy(source: string, dest: string, options?: { force: Boolean }): void
+copy(
+    source: string,
+    dest: string,
+    options?: {
+        /**
+         * 保留命中规则的项(gitignore规则 https://git-scm.com/docs/gitignore),另支持正则和回调函数(见example)
+         */
+        filter?: string | RegExp | (string | RegExp)[] | ((path: string) => Boolean)
+        /**
+         * 忽略命中规则的项(gitignore规则 https://git-scm.com/docs/gitignore),另支持正则和回调函数(见example)
+         */
+        ignore?: string | RegExp | (string | RegExp)[] | ((path: string) => Boolean)
+        /**
+         * 重命名回调，返回新的文件名或目录名, 返回null时使用不重命名
+         * @param fileOriginPath 源文件路径
+         * @param fileDestPath 目标文件路径
+         * @returns
+         */
+        rename: (fileOriginPath: string, fileDestPath: string) => string | void
+        /**
+         * 内容重写回调, 返回新的文件内容, 返回null时不重写内容
+         * @param fileOriginPath 源文件路径
+         * @param fileDestPath 目标文件路径
+         */
+        transform: (fileOriginPath: string, fileDestPath: string) => string | Buffer | void
+    }
+): void
 ```
 
-| param     | description                                      |
-| --------- | ------------------------------------------------ |
-| `source`  | 源路径                                           |
-| `dest`    | 目标路径                                         |
-| `options` | 可传入 `filter` 、 `ignore` 对复制的内容进行限定 |
+| param               | description                                  |
+| ------------------- | -------------------------------------------- |
+| `source`            | 源路径                                       |
+| `dest`              | 目标路径                                     |
+| `options.filter`    | 可传入 `filter` 对复制的内容进行限定         |
+| `options.ignore`    | 可传入 `ignore` 对复制的内容进行过滤         |
+| `options.rename`    | 可传入 `rename` 方法, 对目标文件或目录重命名 |
+| `options.transform` | 可传入 `transform` 方法, 对目标内容进行重写  |
 
 ### Support 6 cases:
 
@@ -326,6 +355,20 @@ file.copy('./dir1', './dir2', { filter: '*.(jpg|png|git)' })
 
 // 不复制 .开头的隐藏文件，不复制 node_moduels
 file.copy('./dir1', './dir2', { ignore: [/^\/\./, 'node_modules'] })
+
+// 重命名
+file.copy('./dir1', './dir2', {
+    rename: (origin, dest) => dest.endsWith('.template') && dest.slice(0, -9),
+})
+
+// 内容重写
+file.copy('./dir1', './dir2', {
+    transform(origin, dest) {
+        if (origin.endsWith('.json')) {
+            return JSON.stringify({ data: JSON.parse(FS.readFileSync(origin, 'utf-8')), type: 'json' })
+        }
+    },
+})
 ```
 
 ## `rm()`

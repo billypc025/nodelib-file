@@ -29,22 +29,36 @@ async function read(path, options) {
 }
 
 async function copy(source, dest, options = {}) {
-    let { filter, ignore } = options
+    let { filter, ignore, transform, rename } = options
     options = { all: true, onlyLeaf: true, filter, ignore }
     ;(await isDirectory(source))
         ? dest.endsWith(Path.sep) && !source.endsWith(Path.sep) && (dest = Path.join(dest, Path.basename(source)))
         : (dest.endsWith(Path.sep) || (await isDirectory(dest))) && (dest = Path.join(dest, Path.basename(source)))
     if (FS.cp) {
-        if (!Path.relative(source, dest).startsWith('.')) {
+        if (
+            !Path.relative(source, dest).startsWith('.') ||
+            typeof transform == 'function' ||
+            typeof rename == 'function'
+        ) {
             let fileList = await readdir(source, options)
             for (let file of fileList) {
                 let dest1 = dest.endsWith(Path.sep)
                     ? Path.join(dest, file)
                     : Path.join(dest, Path.relative(source, file))
+                typeof rename == 'function' && (dest1 = rename(file, dest1) || dest1)
                 if (await isDirectory(file)) {
                     await mkdir(dest1)
                 } else {
-                    await FS.cp(file, dest1, { force: true, recursive: true })
+                    if (typeof transform == 'function') {
+                        await mkdir(Path.dirname(dest1))
+                        let destContent = transform(file, dest1)
+                        if (destContent instanceof Promise) {
+                            destContent = await destContent
+                        }
+                        await FS.writeFile(dest1, destContent || (await FS.readFile(file)))
+                    } else {
+                        await FS.cp(file, dest1, { force: true, recursive: true })
+                    }
                 }
             }
         } else {
@@ -64,11 +78,26 @@ async function copy(source, dest, options = {}) {
                 dest.endsWith(Path.sep) && !source.endsWith(Path.sep)
                     ? Path.join(dest, file)
                     : Path.join(dest, Path.relative(source, file))
+            if (typeof rename == 'function') {
+                let newDest = rename(file, dest1)
+                if (newDest instanceof Promise) {
+                    newDest = await newDest
+                }
+                dest1 = newDest || dest1
+            }
             if (isDirectory(file)) {
                 await mkdir(dest1)
             } else {
                 await mkdir(Path.dirname(dest1))
-                await FS.copyFile(file, dest1)
+                if (typeof transform == 'function') {
+                    let destContent = transform(file, dest1)
+                    if (destContent instanceof Promise) {
+                        destContent = await destContent
+                    }
+                    await FS.writeFile(dest1, destContent || (await FS.readFile(file)))
+                } else {
+                    await FS.copyFile(file, dest1)
+                }
             }
         }
     }
