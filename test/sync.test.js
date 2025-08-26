@@ -288,10 +288,10 @@ describe('isPath', () => {
 describe('isSymbolicLink', () => {
     test('', () => {
         file.mkdir('a')
-        FS.symlinkSync('a', 'b')
-        expect(file.isSymbolicLink('b')).toBe(true)
+        FS.symlinkSync('a', 'a_symblink')
+        expect(file.isSymbolicLink('a_symblink')).toBe(true)
         file.rm('a')
-        file.rm('b')
+        file.rm('a_symblink')
     })
 })
 
@@ -304,5 +304,12 @@ describe('gitignoreParse', () => {
             /^\/node_modules\/$/i,
             /[^/*]+lock\.json/i,
         ])
+    })
+})
+
+describe('exists', () => {
+    test('', () => {
+        expect(file.exists('.gitignore')).toEqual(true)
+        expect(file.exists('.gitignore_not_exists')).toEqual(false)
     })
 })

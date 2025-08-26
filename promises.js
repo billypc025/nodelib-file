@@ -248,6 +248,15 @@ async function gitignoreParse(path, returnRegExp = false) {
     )
 }
 
+async function exists(path) {
+    try {
+        await FS.access(path)
+        return true
+    } catch {
+        return false
+    }
+}
+
 module.exports = {
     isDirectory,
     isFile,
@@ -261,4 +270,5 @@ module.exports = {
     readdir,
     search,
     gitignoreParse,
+    exists,
 }

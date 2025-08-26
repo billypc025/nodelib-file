@@ -309,4 +309,10 @@ export function isPath(str: string): Boolean
  */
 export function gitignoreParse(path: string, returnRegExp: false): string[]
 export function gitignoreParse(path: string, returnRegExp: true): RegExp[]
+/**
+ * 检查 path 是否存在
+ * @param {string} path 目标路径
+ * @returns {boolean}
+ */
+export function exists(path: string): boolean
 export * as promises from './promises'

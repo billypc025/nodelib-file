@@ -234,6 +234,10 @@ function gitignoreParse(path, returnRegExp = false) {
     )
 }
 
+function exists(path) {
+    return FS.existsSync(path)
+}
+
 module.exports = {
     isDirectory,
     isFile,
@@ -247,5 +251,6 @@ module.exports = {
     readdir,
     search,
     gitignoreParse,
+    exists,
     promises,
 }

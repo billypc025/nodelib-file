@@ -317,3 +317,8 @@ export function isPath(str: string): Promise<Boolean>
  */
 export function gitignoreParse(path: string, returnRegExp: false): Promise<string[]>
 export function gitignoreParse(path: string, returnRegExp: true): Promise<RegExp[]>
+/**
+ * 检查 path 是否存在
+ * @param {string} path 目标路径
+ */
+export function exists(path: string): Promise<boolean>

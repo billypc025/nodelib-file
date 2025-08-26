@@ -582,3 +582,13 @@ search(
 | `options.absolute`  | 是否返回绝对路径, 默认 `false`                                                                                                                                                                          |
 | `options.onlyLeaf`  | 结果是否排除目录, 默认 `true`                                                                                                                                                                           |
 | `options.ignore`    | 忽略命中规则的项 [(参见 .gitignore 规则)](https://git-scm.com/docs/gitignore), 支持正则和回调函数                                                                                                       |
+
+## `exists()`
+
+检查 path 是否存在
+
+```typescript
+// typescript declaration
+
+export function exists(path: string): boolean
+```

@@ -294,10 +294,10 @@ describe('isPath', () => {
 describe('isSymbolicLink', () => {
     test('', async () => {
         await file.mkdir('a')
-        FS.symlinkSync('a', 'b')
-        await expect(file.isSymbolicLink('b')).resolves.toBe(true)
+        FS.symlinkSync('a', 'a_symblink')
+        await expect(file.isSymbolicLink('a_symblink')).resolves.toBe(true)
         await file.rm('a')
-        await file.rm('b')
+        await file.rm('a_symblink')
     })
 })
 
@@ -315,5 +315,12 @@ describe('gitignoreParse', () => {
             /^\/node_modules\/$/i,
             /[^/*]+lock\.json/i,
         ])
+    })
+})
+
+describe('exists', () => {
+    test('', async () => {
+        await expect(file.exists('.gitignore')).resolves.toEqual(true)
+        await expect(file.exists('.gitignore_not_exists')).resolves.toEqual(false)
     })
 })
