@@ -41,12 +41,18 @@ File.readdir('./projectDir', { rebase: false, all: true, ignore: ['*.json', 'nod
 File.readdir('./dist/web_root', { all: true, ignore: File.gitignoreParse('.gitignore') })
 ```
 
-## Async function
+## Async function （异步调用）
+
+提供了异步版本，但为节省篇幅，以下文档均只介绍同步方法，异步调用的方法及入参和同步方法保持一致。
 
 ```javascript
-const File = require('nodelib-file').promises
+// 文件保存：同步示例
+const File = require('nodelib-file')
+File.save(filePath, fileContent)
 
-;(async () => await File.save(filePath, fileContent))()
+// 文件保存：异步示例
+const FilePromises = require('nodelib-file').promises
+;(async () => await FilePromises.save(filePath, fileContent))()
 
 //All Async function same as Sync function
 ```
@@ -129,14 +135,14 @@ readdir(
 >
 > `options.returnObj = true`, 返回结果的 `type`:
 >
-> -   `1` (`UV_DIRENT_FILE`): 普通文件。
-> -   `2` (`UV_DIRENT_DIR`): 目录。
-> -   `3` (`UV_DIRENT_LINK`): 符号链接。
-> -   `4` (`UV_DIRENT_FIFO`): 命名管道 (FIFO)。
-> -   `5` (`UV_DIRENT_SOCKET`): 套接字。
-> -   `6` (`UV_DIRENT_CHAR`): 字符设备文件。
-> -   `7` (`UV_DIRENT_BLOCK`): 块设备文件。
-> -   `0` (`UV_DIRENT_UNKNOWN`): 未知类型
+> - `1` (`UV_DIRENT_FILE`): 普通文件。
+> - `2` (`UV_DIRENT_DIR`): 目录。
+> - `3` (`UV_DIRENT_LINK`): 符号链接。
+> - `4` (`UV_DIRENT_FIFO`): 命名管道 (FIFO)。
+> - `5` (`UV_DIRENT_SOCKET`): 套接字。
+> - `6` (`UV_DIRENT_CHAR`): 字符设备文件。
+> - `7` (`UV_DIRENT_BLOCK`): 块设备文件。
+> - `0` (`UV_DIRENT_UNKNOWN`): 未知类型
 >
 > [(See Node.js fs constants)](https://github.com/nodejs/node/blob/c17dcb32533aa007dfbf507d22c28ef3c7c11c29/lib/internal/fs/utils.js#L72-L79)
 
@@ -278,13 +284,12 @@ copy(
 ### Support 6 cases:
 
 1.  Copy & Rename
-
-    -   `path/dir1` copy to `path/dir2`
+    - `path/dir1` copy to `path/dir2`
         ```javascript
         file.copy('path/dir1', 'path/dir2')
         file.copy('path/dir1/', 'path/dir2/') // same as above
         ```
-    -   `path/file1` copy to `path/file2`
+    - `path/file1` copy to `path/file2`
         ```javascript
         file.copy('path/file1', 'path/file2')
         ```
@@ -516,6 +521,18 @@ read(path: string, options: string | { encoding?: string; flag?: string }): stri
 | `path`             | 目标文件路径           |
 | `options.encoding` | 文件编码,默认 `'utf8'` |
 | `options.flag`     | 默认 `'r'`             |
+
+## `readJSON()`
+
+同步读取json文件，并自动解析为Object
+
+```typescript
+readJSON(path: string): object
+
+readJSON(path: string, options: string | { encoding?: string; flag?: string }): object
+```
+
+参数和 `read()` 相同
 
 ## `save()`
 

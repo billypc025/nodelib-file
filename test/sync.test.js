@@ -1,3 +1,22 @@
+/**
+ * Runs a series of tests for file system utility functions such as mkdir, rm, save, read, copy, readdir, and others.
+ *
+ * @fileoverview
+ * This test suite covers the following functionalities:
+ * - Creating directories recursively (`mkdir`)
+ * - Removing files and directories recursively (`rm`)
+ * - Saving and reading files and JSON (`save`, `read`, `readJSON`)
+ * - Checking if a path is a directory or file (`isDirectory`, `isFile`)
+ * - Copying files and directories with various options (`copy`)
+ * - Reading directory contents with filtering, ignoring, and formatting options (`readdir`)
+ * - Checking if a string is a valid path (`isPath`)
+ * - Checking if a path is a symbolic link (`isSymbolicLink`)
+ * - Parsing .gitignore files (`gitignoreParse`)
+ * - Checking if a file or directory exists (`exists`)
+ *
+ * Each test ensures the correct behavior of the corresponding file utility function.
+ *
+ */
 const FS = require('node:fs')
 const Path = require('node:path')
 const file = require('../index')
@@ -48,13 +67,16 @@ describe('rm', () => {
 
 describe('file R/W', () => {
     let fileContent = `module.exports='hello'`
+    let jsonObject = { name: 'billy', age: 18 }
     test('save', () => {
         file.save('a/1/2/3.js', fileContent)
-        expect(require(Path.resolve('a/1/2/3.js'))).toBe('hello')
+        file.save('a/1/2/3.json', JSON.stringify(jsonObject))
     })
-
+    
     test('read', () => {
         expect(file.read('a/1/2/3.js')).toBe(fileContent)
+        expect(require(Path.resolve('a/1/2/3.js'))).toBe('hello')
+        expect(file.readJSON('a/1/2/3.json')).toEqual(jsonObject)
         file.rm('a')
     })
 })
@@ -236,7 +258,7 @@ describe('readdir', () => {
         ])
 
         expect(
-            file.readdir('a', { all: true, filter: p => ['.png', '.jpg', '.gif'].includes(Path.extname(p)) })
+            file.readdir('a', { all: true, filter: p => ['.png', '.jpg', '.gif'].includes(Path.extname(p)) }),
         ).toEqual(['a/imgs/1.png', 'a/c/imgs/3.gif', 'a/c/imgs/2.jpg'])
     })
 
@@ -249,7 +271,7 @@ describe('readdir', () => {
         expect(file.readdir('a/c/imgs', { all: true, ignore: ['*.jpg', '*.png'] })).toEqual(['a/c/imgs/3.gif'])
 
         expect(
-            file.readdir('a/c/imgs', { all: true, ignore: p => ['.png', '.jpg'].includes(Path.extname(p)) })
+            file.readdir('a/c/imgs', { all: true, ignore: p => ['.png', '.jpg'].includes(Path.extname(p)) }),
         ).toEqual(['a/c/imgs/3.gif'])
     })
 

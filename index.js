@@ -29,6 +29,14 @@ function read(path, options) {
     }
 }
 
+function readJSON(path, options) {
+    try {
+        return JSON.parse(read(path, options))
+    } catch (err) {
+        throw err
+    }
+}
+
 function copy(source, dest, options = {}) {
     let { filter, ignore, transform, rename } = options
     options = { all: true, onlyLeaf: true, filter, ignore }
@@ -198,7 +206,7 @@ function readdir(path, options = {}) {
                               l.length > 0 && a.splice(i + 1, 0, ...l),
                               onlyLeaf && s && l.length > 0 ? d() : absolute ? Path.resolve(n) : m)),
                     r && filter && utils.matchFilter(filter, t) && filter.list.push(r),
-                    r)
+                    r),
           ),
           filter && filter.list && _base == '/' && (list = filter.list),
           list)
@@ -229,8 +237,9 @@ function gitignoreParse(path, returnRegExp = false) {
     return utils.arrayReplace(
         read(path).split('\n'),
         (v, i, a, d) => (
-            (v = v.trim()), !v || v[0] == '#' || v[0] == ':' ? d() : returnRegExp ? utils.ignoreToRegExp(v) : v
-        )
+            (v = v.trim()),
+            !v || v[0] == '#' || v[0] == ':' ? d() : returnRegExp ? utils.ignoreToRegExp(v) : v
+        ),
     )
 }
 
@@ -245,6 +254,7 @@ module.exports = {
     isPath,
     save,
     read,
+    readJSON,
     mkdir,
     copy,
     rm,

@@ -11,7 +11,7 @@
 export function save(
     path: string,
     data: string | Buffer,
-    options?: { encoding?: string; mode?: number; flag?: string; flush?: Boolean; signal?: AbortSignal }
+    options?: { encoding?: string; mode?: number; flag?: string; flush?: Boolean; signal?: AbortSignal },
 ): void
 /**
  * 同步读取文件内容
@@ -21,6 +21,14 @@ export function save(
  */
 export function read(path: string): string
 export function read(path: string, options: string | { encoding?: string; flag?: string }): string | Buffer
+/**
+ * 同步读取json文件
+ * @param path 目标文件路径
+ * @param options.encoding 文件编码,默认`utf8`
+ * @param options.flag 默认'r'
+ */
+export function readJSON(path: string): object
+export function readJSON(path: string, options: string | { encoding?: string; flag?: string }): object
 /**
  * 同步创建目录 (递归创建子目录)
  * @param path 目标目录路径
@@ -75,7 +83,7 @@ export function copy(
          * @param fileDestPath 目标文件路径
          */
         transform: (fileOriginPath: string, fileDestPath: string) => string | Buffer | void
-    }
+    },
 ): void
 /**
  * 目标是否目录
@@ -216,7 +224,7 @@ export function readdir(
          * 忽略命中规则的项(gitignore规则 https://git-scm.com/docs/gitignore),另支持正则和回调函数(见example)
          */
         ignore?: string | RegExp | (string | RegExp)[] | ((path: string) => Boolean)
-    }
+    },
 ): string[]
 export function readdir(
     path: string,
@@ -249,7 +257,7 @@ export function readdir(
          * 忽略命中规则的项(gitignore规则 https://git-scm.com/docs/gitignore),另支持正则和回调函数(见example)
          */
         ignore?: string | RegExp | (string | RegExp)[] | ((path: string) => Boolean)
-    }
+    },
 ): { name: string; path: string; isFile: Boolean; isDirectory: Boolean; isSymbolicLink: Boolean; type: number }[]
 /**
  * 在目录中搜索指定规则的文件
@@ -270,7 +278,7 @@ export function search(
         absolute?: Boolean
         onlyLeaf?: Boolean
         ignore?: string | RegExp | (string | RegExp)[] | ((path: string) => Boolean)
-    }
+    },
 ): string[]
 export function search(
     dir: string,
@@ -281,7 +289,7 @@ export function search(
         absolute: Boolean
         onlyLeaf: Boolean
         ignore?: string | RegExp | (string | RegExp)[] | ((path: string) => Boolean)
-    }
+    },
 ): { name: string; path: string; isFile: Boolean; isDirectory: Boolean; isSymbolicLink: Boolean; type: number }[]
 /**
  * 判断字符串是否是文件路径

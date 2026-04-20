@@ -1,5 +1,5 @@
 /**
- * 同步写文件
+ * 异步写文件
  * @param path 目标文件路径
  * @param data 内容
  * @param options.encoding 文件编码,默认`utf8`
@@ -14,7 +14,7 @@ export function save(
     options?: { encoding?: string; mode?: number; flag?: string; flush?: Boolean; signal?: AboutSignal }
 ): Promise<void>
 /**
- * 同步读取文件内容
+ * 异步读取文件内容
  * @param path 目标文件路径
  * @param options.encoding 文件编码,默认`utf8`
  * @param options.flag 默认'r'
@@ -22,7 +22,15 @@ export function save(
 export function read(path: string): Promise<string>
 export function read(path: string, options: string | { encoding?: string; flag?: string }): Promise<string | Buffer>
 /**
- * 同步创建目录 (递归创建子目录)
+ * 异步读取json文件
+ * @param path 目标文件路径
+ * @param options.encoding 文件编码,默认`utf8`
+ * @param options.flag 默认'r'
+ */
+export function readJSON(path: string): Promise<object>
+export function readJSON(path: string, options: string | { encoding?: string; flag?: string }): Promise<object>
+/**
+ * 异步创建目录 (递归创建子目录)
  * @param path 目标目录路径
  * @param mode 访问模式, 默认0o777
  */

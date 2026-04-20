@@ -48,13 +48,15 @@ describe('rm', () => {
 
 describe('file R/W', () => {
     let fileContent = `module.exports='hello'`
+    let jsonObject = { name: 'billy', age: 18 }
     test('save', async () => {
         await file.save('a/1/2/3.js', fileContent)
-        expect(require(Path.resolve('a/1/2/3.js'))).toBe('hello')
+        await file.save('a/1/2/3.json', JSON.stringify(jsonObject))
     })
 
     test('read', async () => {
         await expect(file.read('a/1/2/3.js')).resolves.toBe(fileContent)
+        await expect(file.readJSON('a/1/2/3.json')).resolves.toEqual(jsonObject)
         await file.rm('a')
     })
 })
@@ -236,7 +238,7 @@ describe('readdir', () => {
         ])
 
         await expect(
-            file.readdir('a', { all: true, filter: p => ['.png', '.jpg', '.gif'].includes(Path.extname(p)) })
+            file.readdir('a', { all: true, filter: p => ['.png', '.jpg', '.gif'].includes(Path.extname(p)) }),
         ).resolves.toEqual(['a/imgs/1.png', 'a/c/imgs/3.gif', 'a/c/imgs/2.jpg'])
     })
 
@@ -255,7 +257,7 @@ describe('readdir', () => {
         ])
 
         await expect(
-            file.readdir('a/c/imgs', { all: true, ignore: p => ['.png', '.jpg'].includes(Path.extname(p)) })
+            file.readdir('a/c/imgs', { all: true, ignore: p => ['.png', '.jpg'].includes(Path.extname(p)) }),
         ).resolves.toEqual(['a/c/imgs/3.gif'])
     })
 
